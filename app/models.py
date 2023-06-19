@@ -40,9 +40,9 @@ class Pokemon(db.Model):
         self.ability = ability
         self.sprite_img = sprite_img
 
-        def save_pokemon(self):
-            db.session.add(self)
-            db.session.commit()
+    def save_pokemon(self):
+        db.session.add(self)
+        db.session.commit()
 
     
 

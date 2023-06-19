@@ -1,5 +1,5 @@
 from urllib import response
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, session, url_for
 import requests
 from .forms import RegisterForm
 from ..models import User 
@@ -38,34 +38,46 @@ def login():
         if form.validate():
             username = form.username.data
             password = form.password.data
-            # return redirect(url_for('auth.poke_info'))
+            return redirect(url_for('auth.pokemon_data'))
 
 
-            # user = User(username, password)
+            
     return render_template('login.html',form=form)
 
 
-# @auth.route('/pokemon', methods=['GET', 'POST'])
-# def pokemon_data():
-#     form = PokeForm()
-#     response = requests.get("https://pokeapi.co/api/v2/pokemon/pikachu")
-    
-#     if response.ok:
-#            data = response.json()
-#            pokemon_name = data['name']
-#            ability = [ability['ability']['name'] for ability in data['abilities']]
-#            base_exp = data['base_experience']
-#            sprite_image = data['sprites']['front_shiny']
+@auth.route('/pokemon', methods=['GET', 'POST'])
+def pokemon_data():
+    form = PokeForm()
+    if request.method == 'POST':
+        if form.validate():
+            name = form.poke_name.data
+            response = requests.get(f"https://pokeapi.co/api/v2/pokemon/{name}")
+            if response.ok:
+                data = response.json()
+                global information 
+                pokemon = {}
+                pokemon['name'] = data['forms'][0]['name'] 
+                pokemon['ability'] = data['abilities'][0]['ability']['name']
+                pokemon['base_exp'] = data['base_experience']
+                pokemon['sprite'] = data['sprites']['front_shiny']
+                pokemon['attack'] = data['stats'][1]['base_stat']
+                pokemon['defense'] = data['stats'][2]['base_stat']
+                pokemon['hp'] = data['stats'][0]['base_stat']
+                # pokemon = Pokemon(name, base_exp, ability=ability)
+                # pokemon.save_pokemon
+                information = pokemon
+                
+                return redirect(url_for('auth.info'))
+            else:
+                return "Pokemon not found"
+            
+            
+    return render_template('pokemon.html',form=form)
 
-#     else:
-#         return "Pokemon not found"
 
-    
-#     # pokemon = Pokemon(name=pokemon_name, base_exp=base_exp, ability=ability, sprite_img=sprite_image)
-#     # pokemon.save_pokemon()
-          
-    
-    
 
-#     return render_template('pokemon.html',form=form)
+@auth.route('/info')
+def info():
+    
+    return render_template('info.html', pokemon=information)
 
