@@ -2,11 +2,11 @@
 
 {% block content %}
 
-<h2>Welcome to a whole new world of Pokemon</h2>
-<h3>Register Here to play!</h3>
 
 
-<div class="container">
+
+
+<div class="container col-5">
     <div class="row justify_content-center">
         <form  method="POST" class="col-5">
             {{ form.hidden_tag() }}
@@ -15,7 +15,7 @@
             {{ form.email(class='form-control', placeholder="Email") }}
             {{ form.password(class='form-control', placeholder="Password") }}
             {{ form.confirm_password(class='form-control', placeholder="Confirm Password") }}
-            {{ form.submit(class='btn btn-primary', placeholder="Submit") }}
+            {{ form.submit(class='btn btn-danger', placeholder="Submit") }}
 
 
 

@@ -20,3 +20,8 @@ class PokeForm(FlaskForm):
     poke_name = StringField('poke_name', validators=[DataRequired()])
     submit = SubmitField()
 
+
+class CreateCardForm(FlaskForm):
+    poke_info = StringField('poke_info')
+    img_url = StringField('Image URL')
+

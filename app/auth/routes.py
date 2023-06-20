@@ -7,6 +7,7 @@ from ..models import Pokemon
 from .forms import LoginForm
 from .forms import PokeForm
 import json
+from .forms import CreateCardForm
 
 
 
@@ -59,11 +60,11 @@ def pokemon_data():
                 pokemon['name'] = data['forms'][0]['name'] 
                 pokemon['ability'] = data['abilities'][0]['ability']['name']
                 pokemon['base_exp'] = data['base_experience']
-                pokemon['sprite'] = data['sprites']['front_shiny']
+                pokemon['sprite_img'] = data['sprites']['front_shiny']
                 pokemon['attack'] = data['stats'][1]['base_stat']
                 pokemon['defense'] = data['stats'][2]['base_stat']
                 pokemon['hp'] = data['stats'][0]['base_stat']
-                # pokemon = Pokemon(name, base_exp, ability=ability)
+                #pokemon = Pokemon(name, base_exp, ability)
                 # pokemon.save_pokemon
                 information = pokemon
                 
@@ -80,4 +81,11 @@ def pokemon_data():
 def info():
     
     return render_template('info.html', pokemon=information)
+
+@auth.route('/card', methods= ['GET', 'POST'])
+def create_card():
+    form = CreateCardForm()
+
+    return render_template('info.html', form=form)
+
 
