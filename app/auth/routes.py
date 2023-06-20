@@ -60,7 +60,7 @@ def pokemon_data():
                 pokemon['name'] = data['forms'][0]['name'] 
                 pokemon['ability'] = data['abilities'][0]['ability']['name']
                 pokemon['base_exp'] = data['base_experience']
-                pokemon['sprite_img'] = data['sprites']['front_shiny']
+                pokemon['sprite'] = data['sprites']['front_shiny']
                 pokemon['attack'] = data['stats'][1]['base_stat']
                 pokemon['defense'] = data['stats'][2]['base_stat']
                 pokemon['hp'] = data['stats'][0]['base_stat']
