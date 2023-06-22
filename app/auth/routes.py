@@ -8,6 +8,7 @@ from .forms import LoginForm
 from .forms import PokeForm
 import json
 from .forms import CreateCardForm
+# from flask_login import current_user, login_user, logout_user
 
 
 
@@ -52,6 +53,14 @@ def pokemon_data():
     if request.method == 'POST':
         if form.validate():
             name = form.poke_name.data
+            pokemon = Pokemon.query.all()
+            print(pokemon)
+
+            # if pokemon:
+            #     print(pokemon.name)
+            # else:
+            #     print("pokemon doesn't exist")
+                
             response = requests.get(f"https://pokeapi.co/api/v2/pokemon/{name}")
             if response.ok:
                 data = response.json()
@@ -64,14 +73,26 @@ def pokemon_data():
                 pokemon['attack'] = data['stats'][1]['base_stat']
                 pokemon['defense'] = data['stats'][2]['base_stat']
                 pokemon['hp'] = data['stats'][0]['base_stat']
-                #pokemon = Pokemon(name, base_exp, ability)
-                # pokemon.save_pokemon
                 information = pokemon
+
+                
+                new_pokemon=Pokemon(name=pokemon['name'],
+                                        base_exp=pokemon['base_exp'],
+                                        ability=pokemon['ability'],
+                                        sprite=pokemon['sprite'])
+                new_pokemon.save_pokemon()
+ 
+                
+                
+                
                 
                 return redirect(url_for('auth.info'))
             else:
                 return "Pokemon not found"
             
+                
+                    
+                
             
     return render_template('pokemon.html',form=form)
 

@@ -4,12 +4,15 @@ from urllib import response
 
 
 from flask import render_template
+from .models import User
 
-from app.auth.forms import PokeForm
+
 
 
 @app.route('/')
 def land():
+    user_list = User.query.all()
+    print(user_list)
     return render_template('index.html')
 
 

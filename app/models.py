@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+# from flask_login import UserMixin
 
 # from datetime import datetime
 
@@ -10,7 +11,7 @@ class User(db.Model):
     username = db.Column(db.String(50), nullable=False, unique=True )
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
-    post = db.relationship('Pokemon', backref = 'author', lazy = True)
+    
 
 
     def __init__(self, username, email, password):
@@ -30,15 +31,15 @@ class Pokemon(db.Model):
     name = db.Column(db.String, nullable=False,)
     base_exp = db.Column(db.Integer, nullable=False,)
     ability = db.Column(db.String, nullable=False,)
-    sprite_img = db.Column(db.String)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    sprite = db.Column(db.String)
     
     
-    def __init__(self, name, base_exp, ability, sprite_img):
+    
+    def __init__(self, name=None, base_exp=None, ability=None, sprite=None):
         self.name = name
         self.base_exp = base_exp
         self.ability = ability
-        self.sprite_img = sprite_img
+        self.sprite = sprite
 
     def save_pokemon(self):
         db.session.add(self)
