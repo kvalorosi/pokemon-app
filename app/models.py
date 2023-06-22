@@ -6,14 +6,19 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+
+catch = db.Table(
+    'catch',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), nullable=False),
+    db.Column('pokemon_id', db.Integer, db.ForeignKey('pokemon.id'), nullable=False)
+)
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False, unique=True )
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
-    
-
-
+   
     def __init__(self, username, email, password):
         self.username = username
         self.email = email
@@ -32,6 +37,11 @@ class Pokemon(db.Model):
     base_exp = db.Column(db.Integer, nullable=False,)
     ability = db.Column(db.String, nullable=False,)
     sprite = db.Column(db.String)
+    caught = db.relationship('User',
+            secondary = 'catch',
+            backref = 'caught',
+            lazy = 'dynamic'
+            )
     
     
     
@@ -43,6 +53,15 @@ class Pokemon(db.Model):
 
     def save_pokemon(self):
         db.session.add(self)
+        db.session.commit()
+
+    
+    def caught_poke(self, user):
+        self.caught.append(user)
+        db.session.commit()
+
+    def release_poke(self, user):
+        db.session.remove(user)
         db.session.commit()
 
     

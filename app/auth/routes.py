@@ -1,5 +1,6 @@
 from urllib import response
-from flask import Blueprint, render_template, request, redirect, session, url_for
+from flask import Blueprint, flash, render_template, request, redirect, session, url_for
+from flask_login import current_user
 import requests
 from .forms import RegisterForm
 from ..models import User 
@@ -8,7 +9,7 @@ from .forms import LoginForm
 from .forms import PokeForm
 import json
 from .forms import CreateCardForm
-# from flask_login import current_user, login_user, logout_user
+from flask_login import login_user, logout_user
 
 
 
@@ -40,7 +41,7 @@ def login():
         if form.validate():
             username = form.username.data
             password = form.password.data
-            return redirect(url_for('auth.pokemon_data'))
+        return redirect(url_for('auth.pokemon_data'))
 
 
             
@@ -54,7 +55,8 @@ def pokemon_data():
         if form.validate():
             name = form.poke_name.data
             pokemon = Pokemon.query.all()
-            print(pokemon)
+            catch = pokemon.caught.count()
+            pokemon.catch = catch
 
             # if pokemon:
             #     print(pokemon.name)
@@ -83,17 +85,11 @@ def pokemon_data():
                 new_pokemon.save_pokemon()
  
                 
-                
-                
-                
                 return redirect(url_for('auth.info'))
             else:
                 return "Pokemon not found"
             
                 
-                    
-                
-            
     return render_template('pokemon.html',form=form)
 
 
@@ -108,5 +104,28 @@ def create_card():
     form = CreateCardForm()
 
     return render_template('info.html', form=form)
+
+
+
+@auth.route('/pokemon/catch/<int:pokemon_id>')
+def my_poke(pokemon_id):
+    pokemon = Pokemon.query.get(pokemon_id)
+    pokes = current_user.caught
+    print(pokes)
+    if pokemon in pokes:
+        flash(f"You've already caught this Pokemon!", 'warning')
+
+    else:
+        pokemon.caught_poke(current_user)
+        
+        # db.session.commit()
+        flash(f"Pokemon added to your team!", 'success')
+        return redirect(url_for('auth.info'))
+
+
+
+
+
+    
 
 
