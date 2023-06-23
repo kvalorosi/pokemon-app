@@ -55,8 +55,8 @@ def pokemon_data():
         if form.validate():
             name = form.poke_name.data
             pokemon = Pokemon.query.all()
-            catch = pokemon.caught.count()
-            pokemon.catch = catch
+            # catch = pokemon.caught.count()
+            # pokemon.catch = catch
 
             # if pokemon:
             #     print(pokemon.name)
