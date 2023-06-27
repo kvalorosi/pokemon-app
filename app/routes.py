@@ -33,7 +33,13 @@ def pokemon_data():
             if response.ok:
                 data = response.json()
                 global information 
-                pokemon = {}
+                # pokemon = {
+                #     'name': pokemon['name'],
+                #     'ability': pokemon['ability'],
+                #     'base_exp': pokemon['base_experince'],
+                #     'sprite': pokemon['sprite'],
+                #     'attack': pokemon['']
+                # }
                 pokemon['name'] = data['forms'][0]['name'] 
                 pokemon['ability'] = data['abilities'][0]['ability']['name']
                 pokemon['base_exp'] = data['base_experience']

@@ -13,6 +13,8 @@ catch = db.Table(
     db.Column('pokemon_id', db.Integer, db.ForeignKey('pokemon.id'), nullable=False)
 )
 
+
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False, unique=True )
@@ -63,6 +65,18 @@ class Pokemon(db.Model):
     def release_poke(self, user):
         db.session.remove(user)
         db.session.commit()
+
+
+# class Teams(db.Model):
+#     caught_pokemon = db.Column(db.Integer, primary_key=True)
+
+    
+    
+    
+    
+    
+
+
 
     
 
