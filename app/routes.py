@@ -24,22 +24,18 @@ def pokemon_data():
     if request.method == 'POST':
         if form.validate():
             name = form.poke_name.data
-            pokemon = Pokemon.query.all()
+            pokemon = Pokemon.query.filter_by(name=name).first()
+            if pokemon:
+                print(pokemon)
+                return render_template('pokemon.html', form=form, poke=pokemon)
             # catch = pokemon.caught.count()
             # pokemon.catch = catch
 
-                
             response = requests.get(f"https://pokeapi.co/api/v2/pokemon/{name}")
             if response.ok:
                 data = response.json()
-                global information 
-                # pokemon = {
-                #     'name': pokemon['name'],
-                #     'ability': pokemon['ability'],
-                #     'base_exp': pokemon['base_experince'],
-                #     'sprite': pokemon['sprite'],
-                #     'attack': pokemon['']
-                # }
+                print(data)
+                pokemon = {}
                 pokemon['name'] = data['forms'][0]['name'] 
                 pokemon['ability'] = data['abilities'][0]['ability']['name']
                 pokemon['base_exp'] = data['base_experience']
@@ -47,28 +43,26 @@ def pokemon_data():
                 pokemon['attack'] = data['stats'][1]['base_stat']
                 pokemon['defense'] = data['stats'][2]['base_stat']
                 pokemon['hp'] = data['stats'][0]['base_stat']
-                information = pokemon
                 
                 new_pokemon = Pokemon(
                     name=pokemon['name'],
                     base_exp=pokemon['base_exp'],
                     ability=pokemon['ability'],
                     sprite=pokemon['sprite'])
-                    
-                new_pokemon.save_pokemon()
-    
                 
-                return redirect(url_for('info'))
+                new_pokemon.save_pokemon()
+                return render_template('pokemon.html', form=form, poke=new_pokemon)
             else:
-                return "Pokemon not found"
+                flash('Pokemon not found plz try again!', 'danger')
+                return redirect(url_for('pokemon_data'))
                 
                 
     return render_template('pokemon.html',form=form)
 
-@app.route('/info')
-def info():
+# @app.route('/info')  --> We don't need this, we'll render the info on the pokemon.html page if it comes up
+# def info():
     
-    return render_template('info.html', pokemon=information)
+#     return render_template('info.html', pokemon=information)
 
 @app.route('/card', methods= ['GET', 'POST'])
 def create_card():
@@ -83,13 +77,16 @@ def my_poke(pokemon_id):
     print(pokes)
     if pokemon in pokes:
         flash(f"You've already caught this Pokemon!", 'warning')
+        #This isn't done, where should this go?
+        redirect(url_for())
 
     else:
         pokemon.caught_poke(current_user)
         
         # db.session.commit()
         flash(f"Pokemon added to your team!", 'success')
-    return render_template('catch.html')
+        #This isn't done, where should this go?
+        return redirect(url_for())
 
 
 
