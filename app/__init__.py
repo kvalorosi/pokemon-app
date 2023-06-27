@@ -4,6 +4,8 @@ from config import Config
 
 from .auth.routes import auth
 
+
+
 from .models import db, User
 
 from flask_migrate import Migrate
@@ -14,6 +16,9 @@ from flask_moment import Moment
 app = Flask(__name__)
 
 app.config.from_object(Config)
+
+app.register_blueprint(auth)
+
 
 login = LoginManager()
 
@@ -27,7 +32,7 @@ migrate = Migrate(app, db)
 login.init_app(app)
 
 
-app.register_blueprint(auth)
+
 
 
 from . import routes

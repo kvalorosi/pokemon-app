@@ -1,10 +1,13 @@
+from flask_login import current_user
 from app import app
 import requests
 from urllib import response
 
 
-from flask import render_template
-from .models import User
+from flask import flash, redirect, render_template, request, url_for
+
+from app.auth.forms import CreateCardForm, PokeForm
+from .models import Pokemon, User
 
 
 
@@ -13,7 +16,76 @@ from .models import User
 def land():
     user_list = User.query.all()
     print(user_list)
-    return render_template('index.html')
+    return render_template('base.html')
+
+@app.route('/pokemon', methods=['GET', 'POST'])
+def pokemon_data():
+    form = PokeForm()
+    if request.method == 'POST':
+        if form.validate():
+            name = form.poke_name.data
+            pokemon = Pokemon.query.all()
+            # catch = pokemon.caught.count()
+            # pokemon.catch = catch
+
+                
+            response = requests.get(f"https://pokeapi.co/api/v2/pokemon/{name}")
+            if response.ok:
+                data = response.json()
+                global information 
+                pokemon = {}
+                pokemon['name'] = data['forms'][0]['name'] 
+                pokemon['ability'] = data['abilities'][0]['ability']['name']
+                pokemon['base_exp'] = data['base_experience']
+                pokemon['sprite'] = data['sprites']['front_shiny']
+                pokemon['attack'] = data['stats'][1]['base_stat']
+                pokemon['defense'] = data['stats'][2]['base_stat']
+                pokemon['hp'] = data['stats'][0]['base_stat']
+                information = pokemon
+                
+                new_pokemon = Pokemon(
+                    name=pokemon['name'],
+                    base_exp=pokemon['base_exp'],
+                    ability=pokemon['ability'],
+                    sprite=pokemon['sprite'])
+                    
+                new_pokemon.save_pokemon()
+    
+                
+                return redirect(url_for('info'))
+            else:
+                return "Pokemon not found"
+                
+                
+    return render_template('pokemon.html',form=form)
+
+@app.route('/info')
+def info():
+    
+    return render_template('info.html', pokemon=information)
+
+@app.route('/card', methods= ['GET', 'POST'])
+def create_card():
+    form = CreateCardForm()
+
+    return render_template('pokemon_data', form=form)
+
+@app.route('/info/catch/<int:pokemon_id>', methods=['GET', 'POST'])
+def my_poke(pokemon_id):
+    pokemon = Pokemon.query.get(pokemon_id)
+    pokes = current_user.caught
+    print(pokes)
+    if pokemon in pokes:
+        flash(f"You've already caught this Pokemon!", 'warning')
+
+    else:
+        pokemon.caught_poke(current_user)
+        
+        # db.session.commit()
+        flash(f"Pokemon added to your team!", 'success')
+    return render_template('catch.html')
+
+
 
 
     

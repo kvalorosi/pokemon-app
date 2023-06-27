@@ -33,9 +33,9 @@ class User(db.Model):
 
 class Pokemon(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False,)
-    base_exp = db.Column(db.Integer, nullable=False,)
-    ability = db.Column(db.String, nullable=False,)
+    name = db.Column(db.String, nullable=False)
+    base_exp = db.Column(db.Integer, nullable=False)
+    ability = db.Column(db.String, nullable=False)
     sprite = db.Column(db.String)
     caught = db.relationship('User',
             secondary = 'catch',
