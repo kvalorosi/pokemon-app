@@ -15,6 +15,8 @@ catch = db.Table(
 
 
 
+
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False, unique=True )
@@ -59,8 +61,9 @@ class Pokemon(db.Model):
 
     
     def caught_poke(self, user):
-        self.caught.append(user)
-        db.session.commit()
+        if user not in self.caught:
+            self.caught.append(user)
+            db.session.commit()
 
     def release_poke(self, user):
         db.session.remove(user)
@@ -68,7 +71,7 @@ class Pokemon(db.Model):
 
 
 # class Teams(db.Model):
-#     caught_pokemon = db.Column(db.Integer, primary_key=True)
+    #  caught_pokemon = db.Column(db.Integer, primary_key=True)
 
     
     

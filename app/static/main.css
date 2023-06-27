@@ -17,6 +17,11 @@ h2 {
     align-items: center;
 }
 
+.form {
+    display: flex;
+    align-items: center;
+}
+
 
   
 

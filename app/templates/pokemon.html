@@ -14,6 +14,7 @@
         </form>
 
     </div>
+    </div>
     <div class="row justify-content-center">
         {% if poke %}
         <div class="col-4">
@@ -31,11 +32,35 @@
         </div>
         {% endif %}
 
-        name = db.Column(db.String, nullable=False)
+        <!--name = db.Column(db.String, nullable=False)
         base_exp = db.Column(db.Integer, nullable=False)
         ability = db.Column(db.String, nullable=False)
-        sprite = db.Column(db.String)
-    </div>
+        sprite = db.Column(db.String)-->
+        {% if poke %}
+        <div class="card border-danger mb-3" style="width: 18rem;">
+            <img src="{{poke.sprite}}"
+              class="card-img-top">
+            <div class="card-body text-danger">
+              <p class="card-text">"{{poke.name}}"</p>
+              <p class="card-text">Caught: "{{poke.name}}"</p>
+              <a href="/pokemon/catch/{{poke.id}}" class="btn btn-danger">Release Pokemon!</a>
+            </div>
+           
+          </div>
+        {% endif %}
+        </div>
+      </div>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+    </div> 
+
 </div>
 
 

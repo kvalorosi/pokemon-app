@@ -28,9 +28,7 @@ def pokemon_data():
             if pokemon:
                 print(pokemon)
                 return render_template('pokemon.html', form=form, poke=pokemon)
-            # catch = pokemon.caught.count()
-            # pokemon.catch = catch
-
+            
             response = requests.get(f"https://pokeapi.co/api/v2/pokemon/{name}")
             if response.ok:
                 data = response.json()
@@ -59,16 +57,11 @@ def pokemon_data():
                 
     return render_template('pokemon.html',form=form)
 
-# @app.route('/info')  --> We don't need this, we'll render the info on the pokemon.html page if it comes up
-# def info():
-    
-#     return render_template('info.html', pokemon=information)
-
 @app.route('/card', methods= ['GET', 'POST'])
 def create_card():
     form = CreateCardForm()
 
-    return render_template('pokemon_data', form=form)
+    return render_template('pokemon', form=form)
 
 @app.route('/info/catch/<int:pokemon_id>', methods=['GET', 'POST'])
 def my_poke(pokemon_id):
@@ -77,8 +70,8 @@ def my_poke(pokemon_id):
     print(pokes)
     if pokemon in pokes:
         flash(f"You've already caught this Pokemon!", 'warning')
-        #This isn't done, where should this go?
-        redirect(url_for())
+        #This isn't done, where should this go? I typed in pokemon...and pokemon_data neither are working. 
+        return redirect(url_for('pokemon'))
 
     else:
         pokemon.caught_poke(current_user)
@@ -86,7 +79,7 @@ def my_poke(pokemon_id):
         # db.session.commit()
         flash(f"Pokemon added to your team!", 'success')
         #This isn't done, where should this go?
-        return redirect(url_for())
+        return redirect(url_for('pokemon'))
 
 
 
