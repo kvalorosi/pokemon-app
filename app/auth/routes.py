@@ -34,6 +34,7 @@ def login():
         if form.validate():
             username = form.username.data
             password = form.password.data
+          
         return redirect(url_for('pokemon_data'))
 
 
