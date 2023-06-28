@@ -71,15 +71,11 @@ def my_poke(pokemon_id):
     if pokemon in pokes:
         flash(f"You've already caught this Pokemon!", 'warning')
         #This isn't done, where should this go? I typed in pokemon...and pokemon_data neither are working. 
-        return redirect(url_for('pokemon'))
-
+        return redirect(url_for('pokemon_data'))
     else:
         pokemon.caught_poke(current_user)
-        
-        # db.session.commit()
         flash(f"Pokemon added to your team!", 'success')
-        #This isn't done, where should this go?
-        return redirect(url_for('pokemon'))
+        return redirect(url_for('pokemon_data'))
 
 
 
