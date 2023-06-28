@@ -1,13 +1,11 @@
-from urllib import response
+
 from flask import Blueprint, flash, render_template, request, redirect, session, url_for
-from flask_login import current_user
-import requests
+from flask_login import current_user, login_user, logout_user
 from .forms import RegisterForm
 from ..models import User 
 from .forms import LoginForm
-import json
-from .forms import CreateCardForm
-from flask_login import login_user, logout_user
+
+
 
 auth = Blueprint('auth', __name__, template_folder='auth_templates')
 
@@ -34,11 +32,21 @@ def login():
         if form.validate():
             username = form.username.data
             password = form.password.data
-          
-        return redirect(url_for('pokemon_data'))
 
-
+            user = User.query.filter_by(username=username).first()
+            if user:
+                if user.password == password:
+                    flash("You've logged in", 'success')
+                    login_user(user)
+                    return redirect(url_for('pokemon_data'))
+                else:
+                    flash('Wrong pass, try again', 'warning')
+                    return redirect(url_for('auth.login'))
+            else:
+                flash('cannot find that user. . . ', 'danger')
     return render_template('login.html',form=form)
+
+# TO-DO LOGOUT
 
 
 

@@ -61,8 +61,8 @@ class Pokemon(db.Model):
 
     
     def caught_poke(self, user):
-            self.caught.append(user)
-            db.session.commit()
+        self.caught.append(user)
+        db.session.commit()
 
     def release_poke(self, user):
         db.session.remove(user)

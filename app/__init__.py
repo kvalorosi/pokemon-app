@@ -31,7 +31,7 @@ migrate = Migrate(app, db)
 
 login.init_app(app)
 
-
+login.login_view = 'auth.login'
 
 
 
