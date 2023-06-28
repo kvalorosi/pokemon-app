@@ -1,9 +1,10 @@
 
 from flask import Blueprint, flash, render_template, request, redirect, session, url_for
 from flask_login import current_user, login_user, logout_user
-from .forms import RegisterForm
+from .forms import RegisterForm, LoginForm
 from ..models import User 
-from .forms import LoginForm
+
+from werkzeug.security import check_password_hash
 
 
 
@@ -35,18 +36,25 @@ def login():
 
             user = User.query.filter_by(username=username).first()
             if user:
-                if user.password == password:
+                print(user.password)
+                if check_password_hash(user.password, password):
                     flash("You've logged in", 'success')
                     login_user(user)
                     return redirect(url_for('pokemon_data'))
                 else:
                     flash('Wrong pass, try again', 'warning')
-                    return redirect(url_for('auth.login'))
+                    
             else:
                 flash('cannot find that user. . . ', 'danger')
+    
     return render_template('login.html',form=form)
 
-# TO-DO LOGOUT
+@auth.route('/logout')
+def logout():
+    flash("you're logged out, have a great day!", 'secondary')
+    logout_user()
+    return redirect(url_for('land'))
+
 
 
 

@@ -3,21 +3,14 @@ from flask import Flask
 from config import Config
 
 from .auth.routes import auth
-
-
-
 from .models import db, User
-
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_moment import Moment
 
-
 app = Flask(__name__)
 
 app.config.from_object(Config)
-
-app.register_blueprint(auth)
 
 
 login = LoginManager()
@@ -33,10 +26,8 @@ login.init_app(app)
 
 login.login_view = 'auth.login'
 
-
-
+app.register_blueprint(auth)
 
 
 from . import routes
-
 from . import models
