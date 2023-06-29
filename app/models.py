@@ -44,7 +44,7 @@ class Pokemon(db.Model):
             backref = 'caught',
             lazy = 'dynamic'
             )
-    
+
     
     
     def __init__(self, name=None, base_exp=None, ability=None, sprite=None):
@@ -63,7 +63,7 @@ class Pokemon(db.Model):
         db.session.commit()
 
     def release_poke(self, user):
-        db.session.remove(user)
+        db.session.remove()
         db.session.commit()
 
 

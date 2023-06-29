@@ -51,7 +51,7 @@ def login():
 
 @auth.route('/logout')
 def logout():
-    flash("you're logged out, have a great day!", 'secondary')
+    flash("you're logged out, See YA!", 'secondary')
     logout_user()
     return redirect(url_for('land'))
 

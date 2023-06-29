@@ -1,4 +1,4 @@
-from flask_login import current_user
+from flask_login import current_user, login_required
 from app import app
 import requests
 from urllib import response
@@ -64,13 +64,14 @@ def create_card():
     return render_template('pokemon', form=form)
 
 @app.route('/info/catch/<int:pokemon_id>', methods=['GET', 'POST'])
+@login_required
 def my_poke(pokemon_id):
     pokemon = Pokemon.query.get(pokemon_id)
     pokes = current_user.caught
     print(pokes)
     if pokemon in pokes:
         flash(f"You've already caught this Pokemon!", 'warning')
-        #This isn't done, where should this go? I typed in pokemon...and pokemon_data neither are working. 
+        
         return redirect(url_for('pokemon_data'))
     else:
         pokemon.caught_poke(current_user)
@@ -78,7 +79,19 @@ def my_poke(pokemon_id):
         return redirect(url_for('pokemon_data'))
 
 
+@app.route('/info/released/<int:pokemon_id>')
+@login_required
+def noMore(pokemon_id):
+    pokemon = Pokemon.query.get(pokemon_id)
+    pokes = current_user.caught
+    print(pokes)
+    if pokemon in pokes:
+        pokemon.release_poke(current_user)
+        flash(f"I don't want this pokemon anymore", 'danger')
+    else:
+        flash("You haven't caught this pokemon yet!", 'warning')
 
+    return redirect(url_for('pokemon_data'))
 
     
    
