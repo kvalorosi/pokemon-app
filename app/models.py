@@ -10,8 +10,8 @@ db = SQLAlchemy()
 
 catch = db.Table(
     'catch',
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), nullable=False),
-    db.Column('pokemon_id', db.Integer, db.ForeignKey('pokemon.id'), nullable=False)
+    db.Column('user_name', db.Integer, db.ForeignKey('user.username'), nullable=False),
+    db.Column('pokemon_name', db.Integer, db.ForeignKey('pokemon.name'), nullable=False)
 )
 
 
@@ -20,6 +20,11 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(50), nullable=False, unique=True )
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
+    caught = db.relationship('Pokemon',
+            secondary = 'catch',
+            backref = 'caught',
+            lazy = 'dynamic'
+            )
    
     def __init__(self, username, email, password):
         self.username = username
@@ -31,6 +36,14 @@ class User(db.Model, UserMixin):
         db.session.add(self)
         db.session.commit()
 
+    def caught_poke(self, pokemon):
+        self.caught.append(pokemon)
+        db.session.commit()
+
+    def release_poke(self, pokemon):
+        self.caught.remove(pokemon)
+        db.session.commit()
+
 
 
 class Pokemon(db.Model):
@@ -39,11 +52,7 @@ class Pokemon(db.Model):
     base_exp = db.Column(db.Integer, nullable=False)
     ability = db.Column(db.String, nullable=False)
     sprite = db.Column(db.String)
-    caught = db.relationship('User',
-            secondary = 'catch',
-            backref = 'caught',
-            lazy = 'dynamic'
-            )
+    
 
     
     
@@ -57,14 +66,6 @@ class Pokemon(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    
-    def caught_poke(self, user):
-        self.caught.append(user)
-        db.session.commit()
-
-    def release_poke(self, user):
-        db.session.remove()
-        db.session.commit()
 
 
 # class Teams(db.Model):

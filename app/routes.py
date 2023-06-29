@@ -21,6 +21,8 @@ def land():
 @app.route('/pokemon', methods=['GET', 'POST'])
 def pokemon_data():
     form = PokeForm()
+    user = User.query.get(current_user.id)
+    
     if request.method == 'POST':
         if form.validate():
             name = form.poke_name.data
@@ -28,7 +30,7 @@ def pokemon_data():
             if pokemon:
                 print(pokemon)
                 return render_template('pokemon.html', form=form, poke=pokemon)
-            
+                
             response = requests.get(f"https://pokeapi.co/api/v2/pokemon/{name}")
             if response.ok:
                 data = response.json()
@@ -60,33 +62,36 @@ def pokemon_data():
 @app.route('/card', methods= ['GET', 'POST'])
 def create_card():
     form = CreateCardForm()
+    
 
     return render_template('pokemon', form=form)
 
-@app.route('/info/catch/<int:pokemon_id>', methods=['GET', 'POST'])
+@app.route('/info/catch/<pokemon_name>', methods=['GET', 'POST'])
 @login_required
-def my_poke(pokemon_id):
-    pokemon = Pokemon.query.get(pokemon_id)
-    pokes = current_user.caught
+def my_poke(pokemon_name):
+    pokemon = Pokemon.query.get(pokemon_name)
+    user = User.query.get(current_user.id)
+    pokes = user.caught
     print(pokes)
     if pokemon in pokes:
         flash(f"You've already caught this Pokemon!", 'warning')
         
         return redirect(url_for('pokemon_data'))
     else:
-        pokemon.caught_poke(current_user)
+        user.caught_poke(pokemon)
         flash(f"Pokemon added to your team!", 'success')
         return redirect(url_for('pokemon_data'))
 
 
-@app.route('/info/released/<int:pokemon_id>')
+@app.route('/info/released/<pokemon_name>')
 @login_required
-def noMore(pokemon_id):
-    pokemon = Pokemon.query.get(pokemon_id)
-    pokes = current_user.caught
+def noMore(pokemon_name):
+    pokemon = Pokemon.query.get(pokemon_name)
+    user = User.query.get(current_user.id)
+    pokes = user.caught
     print(pokes)
     if pokemon in pokes:
-        pokemon.release_poke(current_user)
+        user.release_poke(pokemon)
         flash(f"I don't want this pokemon anymore", 'danger')
     else:
         flash("You haven't caught this pokemon yet!", 'warning')

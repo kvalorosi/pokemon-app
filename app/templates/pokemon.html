@@ -16,7 +16,7 @@
     </div>
     </div>
     <div class="row justify-content-center">
-        {% if poke %}
+        {% if poke not in user.caught %}
         <div class="col-4">
             <div class="card border-danger mb-3" style="width: 18rem;">
                 <img src="{{poke.sprite}}"
@@ -27,23 +27,23 @@
                     <p class="card-text">base exp: {{poke.base_exp}}</p>
 
                 </div>
-                <a href="/info/catch/{{poke.id}}" class="btn btn-danger">Catch Pokemon!</a>
+                <a href="/info/catch/{{poke.name}}" class="btn btn-danger">Catch Pokemon!</a>
             </div>
         </div>
-        {% endif %}
+       
 
         <!--name = db.Column(db.String, nullable=False)
         base_exp = db.Column(db.Integer, nullable=False)
         ability = db.Column(db.String, nullable=False)
         sprite = db.Column(db.String)-->
-        {% if poke %}
+        {% else %}
         <div class="card border-danger mb-3" style="width: 18rem;">
             <img src="{{poke.sprite}}"
               class="card-img-top">
             <div class="card-body text-danger">
               <p class="card-text">"{{poke.name}}"</p>
               <p class="card-text">Caught: "{{poke.name}}"</p>
-              <a href="/info/released/{{poke.id}}" class="btn btn-danger">Release Pokemon!</a>
+              <a href="/info/released/{{poke.name}}" class="btn btn-danger">Release Pokemon!</a>
             </div>
            
           </div>
